@@ -4,7 +4,7 @@ import java.security.MessageDigest;
 
 public class block{
 
-  private static int difficulty = 6;
+  private static int difficulty = 5;
 
   private static int blockCounter = 0;
   private int index;
@@ -38,13 +38,18 @@ public class block{
     return this.data;
   }
 
-  public boolean setData(String d){
+
+  public boolean setData(String d){  ////this method is for testing block vaildity
     this.data = d;
     return true;
   }
 
   public boolean isMined(){
     return this.isMined;
+  }
+
+  public void setIsMined(boolean flag){
+    this.isMined = flag;
   }
 
   public String getTime(){
@@ -66,7 +71,7 @@ public String getHash(){
 }
 
 public String toString(){
-  return "{\nindex: " + this.index + ",\nData: " +this.data + ",\nTime: " + this.time + ",\nPreviousHash: " + this.previousHash + ",\nHash: " + this.Hash+",\nIsMined: "+this.isMined+"\n}";
+  return "{\n  \"index\":          " + this.index + ",\n  \"Data\":           " +this.data + ",\n  \"Time\":           " + this.time + ",\n  \"PreviousHash\":   " + this.previousHash + ",\n  \"Hash\":           " + this.Hash+",\n  \"IsMined(valid)\": "+this.isMined+"\n}";
 }
 
 public String SHA256(){
@@ -93,19 +98,35 @@ public void blockMining(){
     for(int i = 0 ; i < difficulty ; i++){
       StrDiff = StrDiff+"0";
     }
-    System.out.println("////////////////////////////////////\nStart Mining! Difficulty \'"+difficulty+"\'");
+    System.out.println("-----------------------------\nStart Mining! Block \'"+index+"\' Difficulty \'"+difficulty+"\'");
     while(!temp.equals(StrDiff)){
 
       this.nounce++;
       this.Hash = SHA256();
       temp = this.Hash.substring(0,difficulty);
+      // System.out.println("try \'"+this.Hash+"\'");   //////print hash value of each try
       }
 
     if(temp.equals(StrDiff)){
     isMined = true;
-    System.out.println("Mining successfully!\nTotal \'"+nounce+"\' times\n"+"Hash: "+this.Hash+"\n////////////////////////////////////");
+    System.out.println("Mining successfully!\nTotal(nounce) \'"+nounce+"\' times\n"+"Hash: "+this.Hash+"\n-----------------------------");
     }
 
+}
+
+public boolean isChainValid(){       ////////calculate this.Hash == SHA256()
+  boolean flag = false;
+  if(this.Hash.equals(SHA256())){
+    flag = true;
+    System.out.println("Block \'"+this.index+"\' Hash is valid");
+
+  }
+  else{
+    this.isMined = false;
+    System.out.println("Block \'"+this.index+"\' Hash is invalid");
+
+  }
+  return flag;
 }
 
 
